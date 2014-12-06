@@ -4,14 +4,13 @@ name = "typedef"
 version = "0.0.1"
 authors = [ "Nerijus Arlauskas <nercury@gmail.com>" ]
 
-documentation = "https://github.com/Nercury/typedef-rs"
-homepage = "https://github.com/Nercury/typedef-rs"
+documentation = "http://nercury.github.io/typedef-rs/typedef/index.html"
 repository = "https://github.com/Nercury/typedef-rs"
 
 readme = "README.md"
 
 keywords = [
-    "types", "typeid", "type name"
+    "types", "typeid", "runtime", "dynamic", "typing"
 ]
 
 license = "MIT"
