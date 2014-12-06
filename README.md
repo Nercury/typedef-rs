@@ -32,3 +32,8 @@ And this in your crate root:
 ```rust
 extern crate typedef;
 ```
+
+## Resources
+
+- [Use `TypeId` if you do not need type names](http://doc.rust-lang.org/std/intrinsics/struct.TypeId.html)
+- [Full `TypeDef` documentation](http://nercury.github.io/typedef-rs)
