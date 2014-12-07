@@ -21,10 +21,10 @@
 //! use std::fmt::{ Show };
 //! use typedef::{ TypeDef };
 //!
-//! fn foo<T: Show>(value: T) {
+//! fn foo<T: 'static + Show>(value: T) {
 //!     println!(
 //!         "the value of {} type is {}",
-//!         TypeDef::of::<int>(),
+//!         TypeDef::of::<T>(),
 //!         value
 //!     );
 //! }
