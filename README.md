@@ -9,6 +9,12 @@ Identify or compare types, get or print type names.
 ```rust
 use typedef::{ TypeDef };
 
+// type name querying:
+
+assert!(TypeDef::name_of::<int>() == "int");
+
+// and also type value:
+
 let typedef = TypeDef::of::<int>();
 
 assert!(typedef.is::<int>());
