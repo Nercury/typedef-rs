@@ -15,12 +15,19 @@
 //! ```
 //! use typedef::{ TypeDef };
 //!
-//! fn main() {
-//!     println!("type of variable is {}", TypeDef::of::<int>());
-//! }
+//! assert_eq!(TypeDef::name_of::<int>(), "int");
 //! ```
 //!
-//! __>__ `type of variable is int`
+//! Type can also serve as type identifier and name container:
+//!
+//! ```
+//! use typedef::{ TypeDef };
+//!
+//! let typedef = TypeDef::of::<int>();
+//!
+//! assert!(typedef.is::<int>());
+//! assert_eq!(typedef.get_str(), "int");
+//! ```
 //!
 //! More common usage would be in a generic method:
 //!
@@ -28,23 +35,18 @@
 //! use std::fmt::{ Show };
 //! use typedef::{ TypeDef };
 //!
-//! fn foo<T: 'static + Show>(value: T) {
-//!     println!(
+//! fn foo<T: 'static + Show>(value: T) -> String {
+//!     format!(
 //!         "the value of {} type is {}",
 //!         TypeDef::of::<T>(),
 //!         value
-//!     );
+//!     )
 //! }
 //!
 //! fn main() {
-//!     foo(15i);
+//!     assert_eq!(foo(15i), "the value of int type is 15");
 //! }
 //! ```
-//!
-//! __>__ `the value of int type is 15`
-//!
-//! You can also compare type objects, as well as use `is` method to compare
-//! with known type.
 
 use std::intrinsics::TypeId;
 use std::intrinsics::get_tydesc;
@@ -82,6 +84,31 @@ impl TypeDef {
             type_id: TypeId::of::<T>(),
             type_name: unsafe { (*get_tydesc::<T>()).name },
         }
+    }
+
+    /// Get `TypeId` for specified type directly.
+    ///
+    /// ```
+    /// use std::intrinsics::{ TypeId };
+    /// use typedef::{ TypeDef };
+    ///
+    /// assert!(TypeDef::id_of::<int>() == TypeId::of::<int>());
+    /// ```
+    #[stable]
+    pub fn id_of<T: 'static>() -> TypeId {
+        TypeId::of::<T>()
+    }
+
+    /// Get type name for specified type directly.
+    ///
+    /// ```
+    /// use typedef::{ TypeDef };
+    ///
+    /// assert_eq!(TypeDef::name_of::<int>(), "int");
+    /// ```
+    #[stable]
+    pub fn name_of<T: 'static>() -> &'static str {
+        unsafe { (*get_tydesc::<T>()).name }
     }
 
     /// Check if typedef instance matches type.

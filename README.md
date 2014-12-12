@@ -37,3 +37,8 @@ extern crate typedef;
 
 - [Use `TypeId` if you do not need type names](http://doc.rust-lang.org/std/intrinsics/struct.TypeId.html)
 - [Full `TypeDef` documentation](http://nercury.github.io/typedef-rs)
+- [`TypeDef` on crates.io](https://crates.io/crates/typedef)
+
+## License
+
+MIT
