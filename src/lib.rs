@@ -63,7 +63,7 @@ use std::fmt;
 /// assert!(typedef.get_str() == "int");
 /// ```
 #[stable]
-#[deriving(Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct TypeDef {
     type_id: TypeId,
     type_name: &'static str,
