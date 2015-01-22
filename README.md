@@ -11,17 +11,17 @@ use typedef::{ TypeDef };
 
 // type name querying:
 
-assert!(TypeDef::name_of::<int>() == "int");
+assert!(TypeDef::name_of::<i64>() == "i64");
 
 // and also type value:
 
-let typedef = TypeDef::of::<int>();
+let typedef = TypeDef::of::<i64>();
 
-assert!(typedef.is::<int>());
-assert!(typedef.get_str() == "int");
-assert!(typedef == TypeDef::of::<int>());
+assert!(typedef.is::<i64>());
+assert!(typedef.get_str() == "i64");
+assert!(typedef == TypeDef::of::<i64>());
 
-println!("type is {}", typedef);
+println!("type is {:?}", typedef);
 ```
 
 ## Usage
