@@ -5,6 +5,8 @@
 <style>.sidebar { margin-top: 53px }</style>
 */
 
+#![allow(unstable)]
+
 //! TypeDef is used to identify and compare types, as well as print their names.
 //!
 //! If you do not need readable type name, you should use `TypeId`. This
