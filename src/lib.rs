@@ -15,7 +15,7 @@
 //! ```
 //! use typedef::{ TypeDef };
 //!
-//! assert_eq!(TypeDef::name_of::<int>(), "int");
+//! assert_eq!(TypeDef::name_of::<i64>(), "i64");
 //! ```
 //!
 //! Type can also serve as type identifier and name container:
@@ -23,10 +23,10 @@
 //! ```
 //! use typedef::{ TypeDef };
 //!
-//! let typedef = TypeDef::of::<int>();
+//! let typedef = TypeDef::of::<i64>();
 //!
-//! assert!(typedef.is::<int>());
-//! assert_eq!(typedef.get_str(), "int");
+//! assert!(typedef.is::<i64>());
+//! assert_eq!(typedef.get_str(), "i64");
 //! ```
 //!
 //! More common usage would be in a generic method:
@@ -37,18 +37,18 @@
 //!
 //! fn foo<T: 'static + Show>(value: T) -> String {
 //!     format!(
-//!         "the value of {} type is {}",
+//!         "the value of {:?} type is {:?}",
 //!         TypeDef::of::<T>(),
 //!         value
 //!     )
 //! }
 //!
 //! fn main() {
-//!     assert_eq!(foo(15i), "the value of int type is 15");
+//!     assert_eq!(foo(15), "the value of i32 type is 15i32");
 //! }
 //! ```
 
-use std::intrinsics::TypeId;
+use std::any::TypeId;
 use std::intrinsics::get_tydesc;
 use std::fmt;
 
@@ -57,10 +57,10 @@ use std::fmt;
 /// ```
 /// use typedef::{ TypeDef };
 ///
-/// let typedef = TypeDef::of::<int>();
+/// let typedef = TypeDef::of::<i64>();
 ///
-/// assert!(typedef.is::<int>());
-/// assert!(typedef.get_str() == "int");
+/// assert!(typedef.is::<i64>());
+/// assert!(typedef.get_str() == "i64");
 /// ```
 #[stable]
 #[derive(Clone, Copy)]
@@ -76,7 +76,7 @@ impl TypeDef {
     /// ```
     /// use typedef::{ TypeDef };
     ///
-    /// let typedef = TypeDef::of::<int>();
+    /// let typedef = TypeDef::of::<i64>();
     /// ```
     #[stable]
     pub fn of<T: 'static>() -> TypeDef {
@@ -89,10 +89,10 @@ impl TypeDef {
     /// Get `TypeId` for specified type directly.
     ///
     /// ```
-    /// use std::intrinsics::{ TypeId };
+    /// use std::any::{ TypeId };
     /// use typedef::{ TypeDef };
     ///
-    /// assert!(TypeDef::id_of::<int>() == TypeId::of::<int>());
+    /// assert!(TypeDef::id_of::<i64>() == TypeId::of::<i64>());
     /// ```
     #[stable]
     pub fn id_of<T: 'static>() -> TypeId {
@@ -104,7 +104,7 @@ impl TypeDef {
     /// ```
     /// use typedef::{ TypeDef };
     ///
-    /// assert_eq!(TypeDef::name_of::<int>(), "int");
+    /// assert_eq!(TypeDef::name_of::<i64>(), "i64");
     /// ```
     #[stable]
     pub fn name_of<T: 'static>() -> &'static str {
@@ -116,9 +116,9 @@ impl TypeDef {
     /// ```
     /// use typedef::{ TypeDef };
     ///
-    /// let typedef = TypeDef::of::<int>();
+    /// let typedef = TypeDef::of::<i64>();
     ///
-    /// assert!(typedef.is::<int>());
+    /// assert!(typedef.is::<i64>());
     /// ```
     #[stable]
     pub fn is<T: 'static>(&self) -> bool {
@@ -130,9 +130,9 @@ impl TypeDef {
     /// ```
     /// use typedef::{ TypeDef };
     ///
-    /// let typedef = TypeDef::of::<int>();
+    /// let typedef = TypeDef::of::<i64>();
     ///
-    /// assert!(typedef.get_str() == "int");
+    /// assert!(typedef.get_str() == "i64");
     /// ```
     #[stable]
     pub fn get_str(&self) -> &'static str {
@@ -174,7 +174,7 @@ mod test {
     #[test]
     fn should_return_type_name() {
         assert_eq!(TypeDef::of::<i16>().get_str(), "i16");
-        assert_eq!(TypeDef::of::<int>().get_str(), "int");
+        assert_eq!(TypeDef::of::<i64>().get_str(), "i64");
     }
 
     #[test]
