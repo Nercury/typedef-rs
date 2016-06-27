@@ -1,16 +1,15 @@
-/*!
-<a href="https://github.com/Nercury/typedef-rs">
-    <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub">
-</a>
-<style>.sidebar { margin-top: 53px }</style>
-*/
-
-#![allow(unstable)]
+//! <a href="https://github.com/Nercury/typedef-rs">
+//! <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub">
+//! </a>
+//! <style>.sidebar { margin-top: 53px }</style>
+//!
 
 //! TypeDef is used to identify and compare types, as well as print their names.
 //!
 //! If you do not need readable type name, you should use `TypeId`. This
 //! wrapper re-implements `TypeId`.
+//!
+//! Since Rust 1.0, this library can only work on nightly Rust.
 //!
 //! To get a name of a type:
 //!
@@ -34,25 +33,28 @@
 //! More common usage would be in a generic method:
 //!
 //! ```
-//! use std::fmt::{ Show };
-//! use typedef::{ TypeDef };
+//! use std::any::Any;
+//! use std::fmt;
+//! use typedef::TypeDef;
 //!
-//! fn foo<T: 'static + Show>(value: T) -> String {
+//! fn foo<T: Any + fmt::Debug>(value: T) -> String {
 //!     format!(
-//!         "the value of {:?} type is {:?}",
+//!         "the value of {} type is {:?}",
 //!         TypeDef::of::<T>(),
 //!         value
 //!     )
 //! }
 //!
 //! fn main() {
-//!     assert_eq!(foo(15), "the value of i32 type is 15i32");
+//!     assert_eq!(foo(15), "the value of i32 type is 15");
 //! }
 //! ```
 
-use std::any::TypeId;
-use std::intrinsics::get_tydesc;
+#![feature(core_intrinsics)]
+
+use std::any::{Any, TypeId};
 use std::fmt;
+use std::intrinsics::type_name;
 
 /// Create a TypeDef structure to identify a type and to print its name.
 ///
@@ -64,14 +66,12 @@ use std::fmt;
 /// assert!(typedef.is::<i64>());
 /// assert!(typedef.get_str() == "i64");
 /// ```
-#[stable]
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct TypeDef {
-    type_id: TypeId,
-    type_name: &'static str,
+    id: TypeId,
+    name: &'static str,
 }
 
-#[stable]
 impl TypeDef {
     /// Create a TypeDef structure from a type parameter.
     ///
@@ -80,11 +80,10 @@ impl TypeDef {
     ///
     /// let typedef = TypeDef::of::<i64>();
     /// ```
-    #[stable]
-    pub fn of<T: 'static>() -> TypeDef {
+    pub fn of<T: Any>() -> TypeDef {
         TypeDef {
-            type_id: TypeId::of::<T>(),
-            type_name: unsafe { (*get_tydesc::<T>()).name },
+            id: TypeId::of::<T>(),
+            name: unsafe { type_name::<T>() },
         }
     }
 
@@ -96,8 +95,7 @@ impl TypeDef {
     ///
     /// assert!(TypeDef::id_of::<i64>() == TypeId::of::<i64>());
     /// ```
-    #[stable]
-    pub fn id_of<T: 'static>() -> TypeId {
+    pub fn id_of<T: Any>() -> TypeId {
         TypeId::of::<T>()
     }
 
@@ -108,9 +106,8 @@ impl TypeDef {
     ///
     /// assert_eq!(TypeDef::name_of::<i64>(), "i64");
     /// ```
-    #[stable]
-    pub fn name_of<T: 'static>() -> &'static str {
-        unsafe { (*get_tydesc::<T>()).name }
+    pub fn name_of<T: Any>() -> &'static str {
+        unsafe { type_name::<T>() }
     }
 
     /// Check if typedef instance matches type.
@@ -122,9 +119,8 @@ impl TypeDef {
     ///
     /// assert!(typedef.is::<i64>());
     /// ```
-    #[stable]
-    pub fn is<T: 'static>(&self) -> bool {
-        self.type_id == TypeId::of::<T>()
+    pub fn is<T: Any>(&self) -> bool {
+        self.id == TypeId::of::<T>()
     }
 
     /// Get the static `&str` for typedef instance.
@@ -136,31 +132,26 @@ impl TypeDef {
     ///
     /// assert!(typedef.get_str() == "i64");
     /// ```
-    #[stable]
     pub fn get_str(&self) -> &'static str {
-        self.type_name
+        self.name
     }
 }
 
-#[stable]
 impl PartialEq for TypeDef {
-    #[stable]
     fn eq(&self, other: &TypeDef) -> bool {
-        self.type_id == other.type_id
+        self.id == other.id
     }
 }
 
-#[stable]
-impl fmt::Show for TypeDef {
-    #[stable]
+impl fmt::Display for TypeDef {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.type_name)
+        write!(f, "{}", self.name)
     }
 }
 
 #[cfg(test)]
 mod test {
-    use super::{ TypeDef };
+    use super::TypeDef;
 
     #[test]
     fn should_match_type() {
@@ -168,9 +159,8 @@ mod test {
     }
 
     #[test]
-    #[should_fail]
     fn should_not_match_incorrect_type() {
-        assert!(TypeDef::of::<i16>().is::<i32>());
+        assert!(!TypeDef::of::<i16>().is::<i32>());
     }
 
     #[test]

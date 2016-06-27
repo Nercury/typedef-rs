@@ -2,6 +2,8 @@
 
 Identify or compare types, get or print type names.
 
+Since Rust 1.0, this library can only work on nightly Rust.
+
 [![Build Status](https://travis-ci.org/Nercury/typedef-rs.svg?branch=master)](https://travis-ci.org/Nercury/typedef-rs)
 
 ## Quick example
