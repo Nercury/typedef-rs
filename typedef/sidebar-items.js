@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["TypeDef","Create a TypeDef structure to identify a type and to print its name."]]});
