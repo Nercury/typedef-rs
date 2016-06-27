@@ -1,7 +1,6 @@
 language: rust
 rust:
   - nightly
-sudo: false
 
 after_success: |
     cargo doc \
