@@ -2,9 +2,11 @@
 
 Identify or compare types, get or print type names.
 
-Since Rust 1.0, this library can only work on nightly Rust. To activate the nice names instead
-of gobbledygook, include this library with `features = ["nightly"]` configuration parameter.
+Since Rust 1.0, this library can only display type names on nightly Rust. 
 On stable rust, it falls back to gobbledygook (type identifier) instead of a nice name.
+
+To activate the nice names instead of gobbledygook, configure this library with 
+`features = ["nightly"]` configuration parameter.
 
 [![Build Status](https://travis-ci.org/Nercury/typedef-rs.svg?branch=master)](https://travis-ci.org/Nercury/typedef-rs)
 
@@ -34,7 +36,15 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-typedef = "*"
+typedef = "0.3"
+```
+
+Configure nightly feature on you crate so that cargo argument `--features="nightly"` would enable
+`nightly` feature on the typedef crate:
+
+```toml
+[features]
+nightly = ["typedef/nightly"]
 ```
 
 And this in your crate root:
