@@ -46,7 +46,7 @@
 //! }
 //! ```
 
-#![cfg_attr(nightly, feature(core_intrinsics))]
+#![cfg_attr(feature = "nightly", feature(core_intrinsics))]
 
 use std::any::{Any, TypeId};
 use std::fmt;
@@ -206,7 +206,6 @@ impl fmt::Display for TypeDef {
 #[cfg(test)]
 mod test {
     use super::TypeDef;
-    use std::any::TypeId;
 
     #[test]
     fn should_match_type() {
@@ -244,6 +243,7 @@ mod test {
 
     #[cfg(not(feature = "nightly"))]
     fn type_id_fallback<T: 'static>() -> u64 {
+        use std::any::TypeId;
         unsafe { ::std::mem::transmute_copy::<TypeId, u64>(&TypeId::of::<T>()) }
     }
 }
