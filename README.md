@@ -58,9 +58,6 @@ Licensed under either of
 
 at your option.
 
-Contains work Copyright 2015 Sean Kerr, Apache License, Version 2.0. Files
-under this license can be identified by their headers.
-
 ### Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally
