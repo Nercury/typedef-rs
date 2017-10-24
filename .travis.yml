@@ -10,8 +10,6 @@ matrix:
     - rust: nightly
       env: FEATURES=''
     - rust: beta
-      env: FEATURES=nightly
-    - rust: beta
       env: FEATURES=''
     - rust: stable
       env: FEATURES=''
