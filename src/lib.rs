@@ -50,6 +50,8 @@
 
 use std::any::{Any, TypeId};
 use std::fmt;
+use std::hash;
+use std::cmp;
 use std::borrow::Cow;
 
 /// Create a TypeDef structure to identify a type and to print its name.
@@ -62,14 +64,14 @@ use std::borrow::Cow;
 /// assert!(typedef.is::<i64>());
 /// assert!(typedef.get_str() == "i64");
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Eq, Ord, Debug)]
 #[cfg(feature = "nightly")]
 pub struct TypeDef {
     id: TypeId,
     name: &'static str,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Eq, Ord, Debug)]
 #[cfg(not(feature = "nightly"))]
 pub struct TypeDef {
     id: TypeId,
@@ -81,7 +83,7 @@ impl TypeDef {
     /// ```
     /// use typedef::{ TypeDef };
     ///
-    /// let typedef = TypeDef::of::<i64>();
+    /// let _typedef = TypeDef::of::<i64>();
     /// ```
     #[cfg(feature = "nightly")]
     pub fn of<T: Any>() -> TypeDef {
@@ -97,7 +99,7 @@ impl TypeDef {
     /// ```
     /// use typedef::{ TypeDef };
     ///
-    /// let typedef = TypeDef::of::<i64>();
+    /// let _typedef = TypeDef::of::<i64>();
     /// ```
     #[cfg(not(feature = "nightly"))]
     pub fn of<T: Any>() -> TypeDef {
@@ -191,7 +193,22 @@ impl TypeDef {
     }
 }
 
+impl PartialOrd for TypeDef {
+    #[inline(always)]
+    fn partial_cmp(&self, other: &TypeDef) -> Option<cmp::Ordering> {
+        self.id.partial_cmp(&other.id)
+    }
+}
+
+impl hash::Hash for TypeDef {
+    #[inline(always)]
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.id.hash(state)
+    }
+}
+
 impl PartialEq for TypeDef {
+    #[inline(always)]
     fn eq(&self, other: &TypeDef) -> bool {
         self.id == other.id
     }
