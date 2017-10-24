@@ -1,10 +1,19 @@
+sudo: false
 language: rust
-rust:
-  - nightly
 
-after_success: |
-    cargo doc \
-    && echo '<meta http-equiv=refresh content=0;url=typedef/index.html>' > target/doc/index.html && \
-    sudo pip install ghp-import && \
-    ghp-import -n target/doc && \
-    git push -qf https://${TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
+matrix:
+  allow_failures:
+    - rust: nightly
+  include:
+    - rust: nightly
+      env: FEATURES=nightly
+    - rust: nightly
+      env: FEATURES=''
+    - rust: beta
+      env: FEATURES=nightly
+    - rust: beta
+      env: FEATURES=''
+    - rust: stable
+      env: FEATURES=''
+script:
+  - cargo test --features "$FEATURES"
